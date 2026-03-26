@@ -1,5 +1,5 @@
 // gesture.js - MediaPipe Initialization and parsing
-import { changeLungVol, injectBCD, releaseBCD } from './physics.js';
+import { changeLungVol, injectBCD, releaseBCD, state } from './physics.js';
 
 let faceMesh, hands, camera;
 let isReady = false;
@@ -31,18 +31,18 @@ export function initGestures(videoElement, canvasElement) {
             const lowerLip = landmarks[14];
             const mouthDist = Math.abs(upperLip.y - lowerLip.y);
             
-            // Calculate delta
-            const delta = mouthDist - previousMouthDist;
-            previousMouthDist = mouthDist;
+            // Map absolute mouth openness to target lung volume
+            // Closed ~ 0.005, Open ~ 0.060
+            const minDist = 0.005;
+            const maxDist = 0.060;
+            let ratio = (mouthDist - minDist) / (maxDist - minDist);
+            if (ratio < 0) ratio = 0;
+            if (ratio > 1) ratio = 1;
             
-            // Thresholds
-            if (delta > 0.002) {
-                // Inhale
-                changeLungVol(delta * 100); 
-            } else if (delta < -0.001) {
-                // Exhale
-                changeLungVol(delta * 50); // Slower exhale
-            }
+            const targetLungVol = 0.5 + (ratio * 5.5); // Range 0.5L to 6.0L
+            const lerpDelta = (targetLungVol - state.lungVolSurface) * 0.1; // Smooth lerp
+            
+            changeLungVol(lerpDelta);
         }
     });
 
