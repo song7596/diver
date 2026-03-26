@@ -2,7 +2,7 @@
 
 export const CONSTANTS = {
     MASS: 80, // kg
-    BASE_VOL: 77.5, // L (Increased from 75 to make default state more positive/neutral)
+    BASE_VOL: 75.1, // L (adjusted back. At 3L lung, this creates perfect neutral buoyancy at 0m)
     WATER_DENSITY: 1.025, // kg/L
     MAX_LUNG_VOL: 6, // L (at surface)
     MAX_BCD_VOL: 15, // L (at surface)
