@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amigo Dive Neutral Buoyancy Simulator</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/hud.css">
+    
+    <!-- Three.js Import Map -->
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.150.1/examples/jsm/"
+          }
+        }
+    </script>
+
+    <!-- MediaPipe Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <!-- Three.js Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- WebCam Overlay for internal processing & PiP view -->
+    <video id="input_video" autoplay playsinline style="display:none;"></video>
+    <div class="pip-container">
+        <canvas id="pip_canvas"></canvas>
+    </div>
+
+    <!-- HUD Overlay layout -->
+    <div id="hud-layer">
+
+        <!-- Top Right: Gauges -->
+        <div class="gauge-container depth-gauge">
+            <div class="gauge-value" id="val-depth">0.0</div>
+            <div class="gauge-label">미터 (m)</div>
+            <div id="target-band" class="target-band hidden">목표수심</div>
+        </div>
+        
+        <div class="gauge-container tank-gauge">
+            <div class="gauge-value" id="val-tank">200</div>
+            <div class="gauge-label">잔압 (bar)</div>
+        </div>
+
+        <!-- Right Side: Volume Bars -->
+        <div class="bars-container">
+            <div class="bar-wrapper">
+                <div class="bar-title">폐 (Lungs)</div>
+                <div class="bar-bg"><div class="bar-fill lung-fill" id="bar-lung"></div></div>
+            </div>
+            
+            <div class="bar-wrapper">
+                <div class="bar-title">BCD (L)</div>
+                <div class="bar-bg"><div class="bar-fill bcd-fill" id="bar-bcd"></div></div>
+            </div>
+        </div>
+
+        <!-- Center: Buoyancy Status & Safety Warnings -->
+        <div class="center-hud">
+            <div id="safety-stop-timer" class="hidden">안전정지: <span id="val-safetystop">3:00</span></div>
+            <div id="buoyancy-indicator">● 중성부력</div>
+            <div id="warning-msg" class="hidden">경고!</div>
+        </div>
+
+        <!-- Top Left: DCS Gauge -->
+        <div class="dcs-gauge">
+            DCS 위험도
+            <div class="dcs-bar-bg"><div class="dcs-fill" id="bar-dcs"></div></div>
+        </div>
+
+        <!-- Mission Instructions & Photos -->
+        <div class="mission-container">
+            <div id="mission-text">미션 1: 5m 하강 후 대기</div>
+            <div id="mission-countdown" class="hidden">완료까지: <span id="val-mission-time">30</span>초</div>
+        </div>
+        
+        <div class="photo-collection" id="photo-stack">
+            <!-- Captured polaroids will go here -->
+        </div>
+
+        <!-- Flash UI overlay for photo/damage -->
+        <div id="flash-overlay" class="hidden"></div>
+        <div id="game-over-screen" class="hidden">
+            <h1 id="game-over-title">GAME OVER</h1>
+            <p id="game-over-reason"></p>
+            <button onclick="location.reload()">다시 시작</button>
+        </div>
+        <div id="start-screen">
+            <h1>다이빙 시뮬레이터</h1>
+            <p>초기화 중...</p>
+            <button id="btn-start" disabled>카메라 권한 허용 및 시작</button>
+        </div>
+    </div>
+
+    <!-- Game Modules -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+/* Base styling */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none;
+}
+
+#canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* behind everything */
+}
+
+/* UI Layer */
+#hud-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none; /* Let clicks pass through if needed, though mostly webcam based */
+}
+
+/* Helper for clickable elements */
+#start-screen, #game-over-screen, button {
+    pointer-events: auto;
+}
+
+/* Startup and Game Over screens */
+#start-screen, #game-over-screen {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 50, 80, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 100;
+}
+
+#start-screen h1, #game-over-screen h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    background-color: #00bcd4;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover { background-color: #0097a7; }
+button:disabled { background-color: #555; cursor: not-allowed; }
+
+/* Gauges - Top Right */
+.gauge-container {
+    position: absolute;
+    right: 20px;
+    background: rgba(0,0,0,0.5);
+    border: 2px solid #00bcd4;
+    border-radius: 10px;
+    padding: 10px 20px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 0 10px rgba(0,255,255,0.2);
+}
+
+.depth-gauge { top: 20px; min-width: 120px; }
+.tank-gauge { top: 120px; min-width: 120px; }
+
+.gauge-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+}
+
+.gauge-label {
+    font-size: 0.9rem;
+    color: #ccc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Bars - Right Side (Lung & BCD) */
+.bars-container {
+    position: absolute;
+    right: 20px;
+    top: 250px;
+    display: flex;
+    gap: 20px;
+}
+
+.bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+}
+
+.bar-title {
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+    text-shadow: 1px 1px 2px black;
+}
+
+.bar-bg {
+    width: 30px;
+    height: 200px;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid #444;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.bar-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    transition: height 0.1s ease-out;
+}
+
+.lung-fill { background: linear-gradient(to top, #ff9800, #ffeb3b); }
+.bcd-fill { background: linear-gradient(to top, #2196f3, #00bcd4); }
+
+/* Center HUD */
+.center-hud {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#buoyancy-indicator {
+    background: rgba(0,0,0,0.5);
+    color: #00ff00;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: 1px solid #00ff00;
+}
+
+#warning-msg {
+    color: #ff0000;
+    font-size: 2rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px black, 0 0 10px red;
+    animation: blink 0.5s infinite alternate;
+}
+
+@keyframes blink {
+    from { opacity: 1; }
+    to { opacity: 0.3; }
+}
+
+#safety-stop-timer {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #ff9800;
+    text-shadow: 2px 2px 4px black;
+}
+
+/* DCS Gauge - Top Left */
+.dcs-gauge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px black;
+}
+
+.dcs-bar-bg {
+    width: 200px;
+    height: 15px;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid #444;
+    border-radius: 10px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.dcs-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(to right, #4caf50, #ffeb3b, #f44336);
+    transition: width 0.2s ease-out;
+}
+
+/* Mission instructions */
+.mission-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    border-left: 5px solid #00bcd4;
+}
+
+#mission-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+#mission-countdown {
+    color: #ffeb3b;
+    font-size: 1rem;
+    margin-top: 5px;
+}
+
+/* PiP Camera */
+.pip-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 120px;
+    background: rgba(0,0,0,0.8);
+    border: 2px solid #555;
+    border-radius: 10px;
+    overflow: hidden;
+    z-index: 10;
+}
+
+#pip_canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* mirror */
+}
+
+/* Polaroids */
+.photo-collection {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 150px;
+    height: 150px;
+}
+
+.polaroid {
+    position: absolute;
+    width: 100px;
+    height: 120px;
+    background: white;
+    padding: 5px;
+    padding-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    transform-origin: center center;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+.polaroid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #444; /* fallback */
+}
+
+/* Target Band in Depth Gauge */
+.target-band {
+    margin-top: 10px;
+    background: #4caf50;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Flash overlay */
+#flash-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: white;
+    z-index: 90;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s ease-out;
+}
