@@ -2,7 +2,7 @@
 
 export const CONSTANTS = {
     MASS: 80, // kg
-    BASE_VOL: 75, // L
+    BASE_VOL: 77.5, // L (Increased from 75 to make default state more positive/neutral)
     WATER_DENSITY: 1.025, // kg/L
     MAX_LUNG_VOL: 6, // L (at surface)
     MAX_BCD_VOL: 15, // L (at surface)
@@ -49,7 +49,7 @@ export function updatePhysics(dt) {
     const drag = state.velocity * Math.abs(state.velocity) * 1.5; // simple quadratic drag
     const acceleration = (state.netForce - drag) / CONSTANTS.MASS;
     
-    state.velocity += acceleration * dt * 5; // Multiplier for responsiveness
+    state.velocity += acceleration * dt * 2.5; // Multiplier lowered to feel more like water
     state.depth += state.velocity * dt;
     
     // Boundaries
@@ -81,14 +81,14 @@ export function updatePhysics(dt) {
 
 export function injectBCD(dt) {
     if (state.tank > 0 && state.bcdVolSurface < CONSTANTS.MAX_BCD_VOL) {
-        state.bcdVolSurface += 1.0 * dt; // 1L per second
+        state.bcdVolSurface += 2.5 * dt; // Faster inflate (was 1L)
         if (state.bcdVolSurface > CONSTANTS.MAX_BCD_VOL) state.bcdVolSurface = CONSTANTS.MAX_BCD_VOL;
     }
 }
 
 export function releaseBCD(dt) {
     if (state.bcdVolSurface > 0) {
-        state.bcdVolSurface -= 1.5 * dt; // 1.5L per second deflate
+        state.bcdVolSurface -= 3.5 * dt; // Faster deflate (was 1.5L)
         if (state.bcdVolSurface < 0) state.bcdVolSurface = 0;
     }
 }
