@@ -41,13 +41,14 @@ export function updatePhysics(dt) {
     const totalVolume = CONSTANTS.BASE_VOL + state.lungVolActual + state.bcdVolActual;
     const buoyantForce = totalVolume * CONSTANTS.WATER_DENSITY; // kg conceptually
     
-    // Net Force = Buoyancy - Gravity(Mass)
+    // Net Force = Buoyancy - Gravity(Mass). Positive means floating UP.
     state.netForce = buoyantForce - CONSTANTS.MASS;
     
-    // 4. Movement (F = ma => a = F/m)
-    // Scale down acceleration for gameplay realism (water resistance)
+    // 4. Movement (Depth increases downwards)
+    // Downward force = Mass - Buoyancy = -state.netForce
+    const downwardForce = -state.netForce;
     const drag = state.velocity * Math.abs(state.velocity) * 1.5; // simple quadratic drag
-    const acceleration = (state.netForce - drag) / CONSTANTS.MASS;
+    const acceleration = (downwardForce - drag) / CONSTANTS.MASS;
     
     state.velocity += acceleration * dt * 2.5; // Multiplier lowered to feel more like water
     state.depth += state.velocity * dt;

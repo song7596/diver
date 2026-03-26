@@ -3,11 +3,11 @@ import { elements, addPhotoFromCanvas, flashScreen } from './hud.js';
 import { getRendererCanvas } from './scene.js';
 
 const MISSIONS = [
-    { targetDepth: 5, tolerance: 0.5, requiredTime: 30, text: '미션 1: 5m 하강 후 대기' },
-    { targetDepth: 10, tolerance: 0.5, requiredTime: 45, text: '미션 2: 10m 하강 후 대기' },
-    { targetDepth: 20, tolerance: 0.5, requiredTime: 90, text: '미션 3: 20m 심해 산호 대기' },
-    { targetDepth: 5, tolerance: 0.5, requiredTime: 180, text: '안전정지: 5m 유지 (3분)', isSafetyStop: true },
-    { targetDepth: 0, tolerance: 0.5, requiredTime: 5, text: '출수: 수면으로 천천히 이동' }
+    { targetDepth: 5, tolerance: 1.0, requiredTime: 30, text: '미션 1: 5m 하강 후 대기' },
+    { targetDepth: 10, tolerance: 1.0, requiredTime: 45, text: '미션 2: 10m 하강 후 대기' },
+    { targetDepth: 20, tolerance: 1.0, requiredTime: 90, text: '미션 3: 20m 심해 산호 대기' },
+    { targetDepth: 5, tolerance: 1.0, requiredTime: 180, text: '안전정지: 5m 유지 (3분)', isSafetyStop: true },
+    { targetDepth: 0, tolerance: 1.0, requiredTime: 5, text: '출수: 수면으로 천천히 이동' }
 ];
 
 let currentMissionIndex = 0;
